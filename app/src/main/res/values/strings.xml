@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ZemogaApp</string>
+
+    <!-- region Tab Layout -->
+    <string name="all_tab_layout">All</string>
+    <string name="favorites_tab_layout">Favorites</string>
+    <!-- endregion -->
+
 </resources>

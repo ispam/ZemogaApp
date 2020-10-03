@@ -56,6 +56,8 @@ dependencies {
 
     //region 3rd Party Libs
     implementation "com.google.dagger:hilt-android:$daggerHilt"
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.google.dagger:hilt-android-compiler:$daggerHilt"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$daggerHiltCompiler"
     kapt "androidx.hilt:hilt-compiler:$daggerHiltCompiler"
