@@ -1,0 +1,22 @@
+ext {
+    java_version = JavaVersion.VERSION_1_8
+
+    // Android
+    coreX = "1.3.2"
+    supportLib = '1.1.0'
+    extensions = '2.0.0-beta01'
+    multiDex = '2.0.1'
+    constraintLayout = '2.0.1'
+    appCompat = '1.2.0'
+    cardView = '1.0.0'
+
+    // Libraries
+    materialTap = '2.7.0'
+    picasso = '2.71828'
+    room = "2.2.5"
+    lifecycle = "2.2.0"
+    retrofit = "2.8.1"
+    okHttp = "4.5.0"
+    daggerHilt = "2.28-alpha"
+    daggerHiltCompiler = "1.0.0-alpha02"
+}
