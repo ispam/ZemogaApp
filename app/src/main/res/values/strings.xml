@@ -4,6 +4,11 @@
     <!-- region Tab Layout -->
     <string name="all_tab_layout">All</string>
     <string name="favorites_tab_layout">Favorites</string>
+    <string name="zemoga_app">Zemoga App</string>
+    <string name="author">Created by Diego.Urrea</string>
+    <string name="unread">Unread</string>
+    <string name="favorited">Favorited</string>
+    <string name="posts">Posts</string>
     <!-- endregion -->
 
 </resources>

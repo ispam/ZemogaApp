@@ -1,6 +1,7 @@
 package co.zemogaapp.posts.adapters
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import co.zemogaapp.posts.fragments.FavoritesFragment
 import co.zemogaapp.posts.fragments.PostsFragment
@@ -8,7 +9,7 @@ import co.zemogaapp.posts.fragments.PostsFragment
 /**
  * Created by diego.urrea on 10/3/2020.
  */
-class MainPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class MainPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
     override fun getItemCount(): Int = NUM_ITEMS
 

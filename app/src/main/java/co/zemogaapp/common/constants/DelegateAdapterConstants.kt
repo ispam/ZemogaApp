@@ -6,5 +6,8 @@ package co.zemogaapp.common.constants
 
 //region Common
 const val COMMON_EMPTY_TYPE = 16000
+//endregion
 
+//region Posts
+const val POST_TYPE = 17000
 //endregion

@@ -53,11 +53,11 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
     implementation "androidx.cardview:cardview:$cardView"
     implementation "androidx.recyclerview:recyclerview:$supportLib"
+    implementation "com.google.android.material:material:$material"
+    implementation "androidx.legacy:legacy-support-v4:$legacy"
 
     //region 3rd Party Libs
     implementation "com.google.dagger:hilt-android:$daggerHilt"
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.google.dagger:hilt-android-compiler:$daggerHilt"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$daggerHiltCompiler"
     kapt "androidx.hilt:hilt-compiler:$daggerHiltCompiler"
@@ -70,6 +70,11 @@ dependencies {
     implementation "androidx.room:room-runtime:$room"
     kapt "androidx.room:room-compiler:$room"
     implementation "androidx.room:room-ktx:$room"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle"
+    implementation "androidx.fragment:fragment-ktx:$fragmentX"
 
     //endregion
 
