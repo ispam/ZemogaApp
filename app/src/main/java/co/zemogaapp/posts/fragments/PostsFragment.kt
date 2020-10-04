@@ -14,8 +14,10 @@ import co.zemogaapp.posts.data.entities.PostState
 import co.zemogaapp.posts.data.view_model.PostViewModel
 import co.zemogaapp.utils.extensions.clear
 import co.zemogaapp.utils.extensions.observe
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_posts.postsRecycler
 
+@AndroidEntryPoint
 class PostsFragment : BaseFragment(), PostDA.ActionListener {
 
     private val viewModel by viewModels<PostViewModel>()
@@ -34,13 +36,16 @@ class PostsFragment : BaseFragment(), PostDA.ActionListener {
     private fun onStateChange(state: PostState?) {
         when (state) {
             is PostState.Empty -> {}
+            is PostState.Error -> {}
+            is PostState.Success -> {
+                viewModel.toDescription(state.data)
+            }
             is PostState.Initialized -> postAdapter.setInitialData(state.list)
         }
     }
 
-
     override fun onClick(item: Post) {
-
+        viewModel.getPostInfo(item)
     }
 
     private fun setUpAdapters() {
@@ -52,9 +57,9 @@ class PostsFragment : BaseFragment(), PostDA.ActionListener {
         }
     }
 
-    override fun onStop() {
+    override fun onDestroy() {
         releaseResources()
-        super.onStop()
+        super.onDestroy()
     }
 
     private fun releaseResources() {

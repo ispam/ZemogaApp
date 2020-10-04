@@ -38,21 +38,6 @@ inline fun ViewModel.useViewModelScope(crossinline block: suspend CoroutineScope
     viewModelScope.launch (Dispatchers.IO) { block() }
 }
 
-inline fun CoroutineScope.launchWithMain(crossinline block: suspend CoroutineScope.() -> Unit) {
-    launch (Dispatchers.Main) { block() }
-}
-
-suspend inline fun <T> CoroutineScope.executeAsync(crossinline body: () -> T): T? {
-    var item : T? = null
-    val deferred = async { item = body() }
-    try {
-        deferred.await()
-    } catch (e: Exception) {
-        CoroutineExceptionHandler { context, exception -> println("Caught $exception") }
-    }
-    return item
-}
-
 suspend fun <T> MutableLiveData<T>.sendValue(item: T?) {
     withContext(Dispatchers.Main) {
         value = item

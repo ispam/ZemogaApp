@@ -5,6 +5,7 @@ import android.os.Bundle
 import co.zemogaapp.R
 import co.zemogaapp.posts.adapters.MainPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.mainFAB
 import kotlinx.android.synthetic.main.activity_main.mainTabLayout
 import kotlinx.android.synthetic.main.activity_main.mainViewPager
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.mainViewPager
  *
  * @author diego.urrea
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var pagerAdapter: MainPagerAdapter

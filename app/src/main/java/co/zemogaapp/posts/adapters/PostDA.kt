@@ -2,7 +2,6 @@ package co.zemogaapp.posts.adapters
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import co.zemogaapp.R
@@ -36,7 +35,7 @@ class PostDA(private val listener: ActionListener): DelegateAdapter<PostDA.ViewH
 
             when(item.state) {
                 State.READ -> {
-
+                    // No op
                 }
                 State.UNREAD -> {
                     header.setBackgroundResource(R.color.unread)
@@ -54,8 +53,8 @@ class PostDA(private val listener: ActionListener): DelegateAdapter<PostDA.ViewH
                 }
             }
 
-            title.text = item.name
-            description.text = item.body
+            title.text = item.title.capitalize()
+            description.text = item.body.capitalize()
 
             itemView.setOnClickListener {
                 listener.onClick(item)
