@@ -16,6 +16,7 @@ import co.zemogaapp.posts.data.entities.Post
 import co.zemogaapp.posts.data.entities.PostState
 import co.zemogaapp.posts.data.entities.State
 import co.zemogaapp.service.APIService
+import co.zemogaapp.utils.DispatcherProvider
 import co.zemogaapp.utils.SuccessData
 import co.zemogaapp.utils.extensions.sendValue
 import co.zemogaapp.utils.foldFunctions
@@ -29,13 +30,14 @@ import kotlinx.coroutines.launch
 class PostViewModel
 @ViewModelInject constructor(private val service: APIService,
                              private val activity: FragmentActivity,
-                             private val postDao: PostDao): ViewModel() {
+                             private val postDao: PostDao,
+                             private val dispatcher: DispatcherProvider): ViewModel() {
 
-    private var postState = MediatorLiveData<PostState>()
+    internal var postState = MediatorLiveData<PostState>()
     fun getPostState(): LiveData<PostState> = postState
 
     fun startFlow() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
 
             val posts = postDao.getTotalPosts()
             if (posts in 1..99) {
@@ -65,7 +67,7 @@ class PostViewModel
     }
 
     fun refreshAll() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             postDao.deleteAllPosts()
             val response = service.getPosts()
             if (response.isSuccessful) {
@@ -87,7 +89,7 @@ class PostViewModel
     }
 
     fun deleteAll() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             postDao.deleteAllPosts()
             postState.sendValue(PostState.DeleteAll)
         }
@@ -119,7 +121,7 @@ class PostViewModel
     }
 
     fun toDescription(successData: SuccessData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             if (!isOnline(activity)) {
                 postState.sendValue(PostState.Error)
                 return@launch
@@ -134,7 +136,7 @@ class PostViewModel
     }
 
     fun getPostInfo(post: Post) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             when (val state = foldFunctions(post, ::getUser, ::getPostComments)) {
                 is PostState.Success -> {
                     postState.sendValue(PostState.Success(state.data))
