@@ -2,11 +2,13 @@ package co.zemogaapp.posts.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import co.zemogaapp.R
 import co.zemogaapp.common.bases.BaseFragment
+import co.zemogaapp.posts.MainActivity
 import co.zemogaapp.posts.adapters.PostAdapter
 import co.zemogaapp.posts.adapters.PostDA
 import co.zemogaapp.posts.data.entities.Post
@@ -14,13 +16,15 @@ import co.zemogaapp.posts.data.entities.PostState
 import co.zemogaapp.posts.data.view_model.PostViewModel
 import co.zemogaapp.utils.extensions.clear
 import co.zemogaapp.utils.extensions.observe
+import co.zemogaapp.utils.isOnline
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_posts.emptyView
 import kotlinx.android.synthetic.main.fragment_posts.postsRecycler
 
 @AndroidEntryPoint
 class PostsFragment : BaseFragment(), PostDA.ActionListener {
 
-    private val viewModel by viewModels<PostViewModel>()
+    private val viewModel by viewModels<PostViewModel>({activity as MainActivity})
 
     private lateinit var postAdapter: PostAdapter
 
@@ -35,12 +39,25 @@ class PostsFragment : BaseFragment(), PostDA.ActionListener {
 
     private fun onStateChange(state: PostState?) {
         when (state) {
-            is PostState.Empty -> {}
-            is PostState.Error -> {}
+            is PostState.Empty -> {
+                emptyView.visibility = View.VISIBLE
+            }
+            is PostState.Error -> {
+                if (!isOnline(requireContext())) {
+                    Toast.makeText(requireContext(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show()
+                }
+            }
+            is PostState.DeleteAll -> {
+                emptyView.visibility = View.VISIBLE
+                postAdapter.clearData()
+            }
             is PostState.Success -> {
                 viewModel.toDescription(state.data)
             }
-            is PostState.Initialized -> postAdapter.setInitialData(state.list)
+            is PostState.Initialized -> {
+                emptyView.visibility = View.GONE
+                postAdapter.setInitialData(state.list)
+            }
         }
     }
 

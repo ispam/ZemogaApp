@@ -4,6 +4,7 @@ import android.os.Parcelable
 import co.zemogaapp.description.data.entities.Comment
 import co.zemogaapp.description.data.entities.Description
 import co.zemogaapp.description.data.entities.User
+import co.zemogaapp.posts.data.entities.FavoriteState
 import co.zemogaapp.posts.data.entities.Post
 import co.zemogaapp.posts.data.entities.PostState
 import kotlinx.android.parcel.Parcelize
@@ -28,6 +29,25 @@ suspend fun foldFunctions(post: Post,
     successData.comments?.let { successModel.comments = it }
 
     return PostState.Success(successModel)
+}
+
+suspend fun foldFunctionsFavorite(post: Post,
+                          vararg functions: suspend (Post, SuccessData) -> FavoriteState): FavoriteState {
+
+    val successData: SuccessData = functions.fold(SuccessData()) { updatedSuccessData, function ->
+        val status = function(post, updatedSuccessData)
+        if (status !is FavoriteState.Continue) {
+            return status
+        }
+        updatedSuccessData
+    }
+
+    val successModel = SuccessData()
+    successData.description?.let { successModel.description = it }
+    successData.user?.let { successModel.user = it }
+    successData.comments?.let { successModel.comments = it }
+
+    return FavoriteState.Success(successModel)
 }
 
 @Parcelize

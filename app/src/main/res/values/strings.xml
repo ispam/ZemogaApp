@@ -16,5 +16,8 @@
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="user">User</string>
+    <string name="empty_disclaimer">Oh no! This is empty, please press the refresh button !</string>
+    <string name="empty_favorites">There\'s no favorited posts yet</string>
+    <string name="no_connection">It looks like there no internet connection, please check</string>
 
 </resources>

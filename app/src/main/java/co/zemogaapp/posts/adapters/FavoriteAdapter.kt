@@ -5,9 +5,9 @@ import co.zemogaapp.common.delegate.RecyclerViewType
 import co.zemogaapp.utils.extensions.toDA
 
 /**
- * Created by diego.urrea on 10/3/2020.
+ * Created by diego.urrea on 10/4/2020.
  */
-class PostAdapter(private val postAction: PostDA.ActionListener): GenericRecyclerViewAdapter<RecyclerViewType>() {
+class FavoriteAdapter(private val postAction: PostDA.ActionListener): GenericRecyclerViewAdapter<RecyclerViewType>() {
 
     init {
         delegateAdapters.apply {
@@ -20,11 +20,6 @@ class PostAdapter(private val postAction: PostDA.ActionListener): GenericRecycle
             clear()
             addAll(list)
         }
-        notifyDataSetChanged()
-    }
-
-    fun clearData() {
-        items.clear()
         notifyDataSetChanged()
     }
 

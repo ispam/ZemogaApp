@@ -8,9 +8,9 @@
     <application
         android:name=".ZemogaApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/zemoga_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/zemoga_round_icon"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".posts.MainActivity" />
         <activity android:name=".description.DescriptionActivity"
-            android:parentActivityName=".posts.MainActivity"/>
+            android:parentActivityName=".posts.MainActivity"
+            android:theme="@style/AppThemeActionBar"/>
     </application>
 
 </manifest>

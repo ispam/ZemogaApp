@@ -10,6 +10,7 @@ sealed class PostState {
     object Empty: PostState()
     object Error: PostState()
     object Continue: PostState()
+    object DeleteAll: PostState()
     class Initialized(val list: List<RecyclerViewType>): PostState()
     class Success(val data: SuccessData): PostState()
 }

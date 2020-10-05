@@ -2,13 +2,16 @@ package co.zemogaapp.posts
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import co.zemogaapp.R
 import co.zemogaapp.posts.adapters.MainPagerAdapter
+import co.zemogaapp.posts.data.view_model.PostViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.mainFAB
 import kotlinx.android.synthetic.main.activity_main.mainTabLayout
 import kotlinx.android.synthetic.main.activity_main.mainViewPager
+import kotlinx.android.synthetic.main.activity_main.toolbarRefresh
 
 /**
  * Main class for supporting posts functionality
@@ -17,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_main.mainViewPager
  */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<PostViewModel>()
 
     private lateinit var pagerAdapter: MainPagerAdapter
 
@@ -36,8 +41,13 @@ class MainActivity : AppCompatActivity() {
             }.attach()
         }
 
-        mainFAB.setOnClickListener {
+        toolbarRefresh.setOnClickListener {
+            viewModel.refreshAll()
+        }
 
+        mainFAB.setOnClickListener {
+            viewModel.deleteAll()
         }
     }
+
 }

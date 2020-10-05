@@ -1,14 +1,17 @@
 package co.zemogaapp.posts.data.view_model
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.zemogaapp.R
 import co.zemogaapp.description.DescriptionActivity
 import co.zemogaapp.description.data.entities.Description
+import co.zemogaapp.persistency.dao.PostDao
 import co.zemogaapp.posts.data.entities.Post
 import co.zemogaapp.posts.data.entities.PostState
 import co.zemogaapp.posts.data.entities.State
@@ -16,6 +19,7 @@ import co.zemogaapp.service.APIService
 import co.zemogaapp.utils.SuccessData
 import co.zemogaapp.utils.extensions.sendValue
 import co.zemogaapp.utils.foldFunctions
+import co.zemogaapp.utils.isOnline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -24,7 +28,8 @@ import kotlinx.coroutines.launch
  */
 class PostViewModel
 @ViewModelInject constructor(private val service: APIService,
-                             private val activity: FragmentActivity): ViewModel() {
+                             private val activity: FragmentActivity,
+                             private val postDao: PostDao): ViewModel() {
 
     private var postState = MediatorLiveData<PostState>()
     fun getPostState(): LiveData<PostState> = postState
@@ -32,6 +37,36 @@ class PostViewModel
     fun startFlow() {
         viewModelScope.launch(Dispatchers.IO) {
 
+            val posts = postDao.getTotalPosts()
+            if (posts in 1..99) {
+                val response = service.getPosts()
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        it.forEachIndexed { index, post ->
+                            if (index < 20) {
+                                post.state = State.UNREAD
+                            } else {
+                                post.state = State.READ
+                            }
+                        }
+                        postDao.insertAll(it)
+                        postState.sendValue(PostState.Initialized(it))
+                    }
+                } else {
+                    postState.sendValue(PostState.Error)
+                }
+            } else if (posts == 0) {
+                postState.sendValue(PostState.Empty)
+            } else {
+                val list = postDao.getAllPosts()
+                postState.sendValue(PostState.Initialized(list))
+            }
+        }
+    }
+
+    fun refreshAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            postDao.deleteAllPosts()
             val response = service.getPosts()
             if (response.isSuccessful) {
                 response.body()?.let {
@@ -42,6 +77,7 @@ class PostViewModel
                             post.state = State.READ
                         }
                     }
+                    postDao.insertAll(it)
                     postState.sendValue(PostState.Initialized(it))
                 }
             } else {
@@ -50,7 +86,14 @@ class PostViewModel
         }
     }
 
-    suspend fun getUser(post: Post, successData: SuccessData): PostState {
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            postDao.deleteAllPosts()
+            postState.sendValue(PostState.DeleteAll)
+        }
+    }
+
+    private suspend fun getUser(post: Post, successData: SuccessData): PostState {
         return try {
             val response = service.getUser(post.userId)
             if (response.isSuccessful) {
@@ -62,12 +105,12 @@ class PostViewModel
         }
     }
 
-    suspend fun getPostComments(post: Post, successData: SuccessData): PostState {
+    private suspend fun getPostComments(post: Post, successData: SuccessData): PostState {
         return try {
             val response = service.getComments(post.id)
             if (response.isSuccessful) {
                 successData.comments = response.body()
-                successData.description = Description(post.userId, post.id, post.title, post.body)
+                successData.description = Description(post.userId, post.id, post.title, post.body, State.UNREAD)
             }
             PostState.Continue
         } catch (e: Exception) {
@@ -76,10 +119,16 @@ class PostViewModel
     }
 
     fun toDescription(successData: SuccessData) {
-        Intent(activity, DescriptionActivity::class.java).apply {
-            putExtra("data", successData)
-            with(activity) {
-                startActivity(this@apply)
+        viewModelScope.launch(Dispatchers.IO) {
+            if (!isOnline(activity)) {
+                postState.sendValue(PostState.Error)
+                return@launch
+            }
+            Intent(activity, DescriptionActivity::class.java).apply {
+                putExtra("data", successData)
+                with(activity) {
+                    startActivity(this@apply)
+                }
             }
         }
     }
